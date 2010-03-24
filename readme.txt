@@ -14,6 +14,7 @@ This plugin allows you to watermark your uploaded images. You can create waterma
 to different image sizes (thumbnail, medium, large, fullsize), positioning it anywhere on the image.
 
 Requirements:
+
 * PHP5
 * GD extension for PHP
 * FreeType Library
