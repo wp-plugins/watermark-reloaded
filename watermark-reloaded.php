@@ -485,28 +485,28 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 				}
 			}
 
-			$this->_messages[] = 'Options updated!';
+			$this->_messages['updated'][] = 'Options updated!';
 		}
 
 		if( !extension_loaded( 'gd' ) ) {
-			$message = 'Error: Watermark RELOADED will not work properly without PHP extension GD';
+			$this->_messages['error'][] = 'Watermark RELOADED will not work without PHP extension GD.';
 			
 			$gd_info = gd_info();
 			if ( !$gd_info['FreeType Support'] ) {
-				$message .= ' and FreeType Library';
+				$this->_messages['error'] = 'Text watermarking requires FreeType Library.';
 			}
-			
-			$this->_messages[] = $message . '.';
 		}
 	
-		foreach($this->_messages as $message) {
+		foreach($this->_messages as $namespace => $messages) {
+			foreach($messages as $message) {
 ?>
-<div class="updated">
+<div class="<?php echo $namespace; ?>">
 	<p>
 		<strong><?php echo $message; ?></strong>
 	</p>
 </div>
 <?php
+			}
 		}
 ?>
 <script type="text/javascript">var wpurl = "<?php bloginfo('wpurl'); ?>";</script>
