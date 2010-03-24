@@ -32,11 +32,12 @@ Please specify as many informations as you can to help me debug the problem. Che
 
 = Error message says that I don't have GD extension installed =
 
-Contact your hosting provider and ask him to enable GD extension for your host.
+Contact your hosting provider and ask him to enable GD extension for your host, because without GD extension you can
+say good bye to watermarking.
 
 = Error message says that I don't have FreeType Library =
 
-Contact your hosting provider and ask him to install FreeType Library on your host.
+Contact your hosting provider and ask him to install FreeType Library on your host, without it you can't make text watermarks.
 
 = Is there any way to watermark previously uploaded images? =
 
@@ -58,4 +59,7 @@ No there's no way to watermark previously uploaded images and probably this feau
 
 = 1.0.2 =
 * Added PHP 5 dependency check
+* Added GD extension dependency check
+* Added FreeType Library dependency check
+* Rewritten error messages output
 * Added donations link
