@@ -1,12 +1,4 @@
 <?php
-/*
-Plugin Name: Watermark RELOADED
-Plugin URI: http://randomplac.es/wordpress-plugins/watermark-reloaded
-Description: Add watermark to your uploaded images and customize your watermark appearance in user friendly settings page.
-Version: 1.0
-Author: Sandi Verdev
-Author URI: http://randomplac.es/
-*/
 
 class Watermark_Reloaded {
 	/**
@@ -14,7 +6,7 @@ class Watermark_Reloaded {
 	 *
 	 * @var string
 	 */
-	private $_version               = '1.0';
+	private $_version               = '1.0.2';
 	
 	/**
 	 * Array with default options
@@ -363,6 +355,13 @@ class Watermark_Reloaded {
 
 class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 	/**
+	 * Error messages to diplay
+	 *
+	 * @var array
+	 */
+	private $_messages = array();
+	
+	/**
 	 * List of available image sizes
 	 *
 	 * @var array
@@ -387,10 +386,13 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 		$this->_plugin_dir = DIRECTORY_SEPARATOR . str_replace(basename(__FILE__), null, plugin_basename(__FILE__)); 
 		
 		// register installer function
-		register_activation_hook(__FILE__, array(&$this, 'activateWatermark'));
+		register_activation_hook(WR_LOADER, array(&$this, 'activateWatermark'));
 		
 		// add plugin "Settings" action on plugin list
-		add_action('plugin_action_links_' . plugin_basename(__FILE__), array(&$this, 'add_plugin_actions'));
+		add_action('plugin_action_links_' . plugin_basename(WR_LOADER), array(&$this, 'add_plugin_actions'));
+		
+		// add links for plugin help, donations,...
+		add_filter('plugin_row_meta', array(&$this, 'add_plugin_links'), 10, 2);
 		
 		// push options page link, when generating admin menu
 		add_action('admin_menu', array(&$this, 'adminMenu'));
@@ -407,6 +409,17 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 	 */
 	public function add_plugin_actions($links) {
 		array_unshift($links, '<a href="options-general.php?page=' . plugin_basename(__FILE__) . '">' . __('Settings') . '</a>');
+		
+		return $links;
+	}
+	
+	/**
+	 * Add links on installed plugin list
+	 */
+	public function add_plugin_links($links, $file) {
+		if($file == plugin_basename(WR_LOADER)) {
+			$links[] = '<a href="http://randomplac.es/wordpress-plugins/donate/">Donate</a>';
+		}
 		
 		return $links;
 	}
@@ -434,20 +447,28 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 	 * @return array
 	 */
 	private function getFonts() {
-		$dir = new DirectoryIterator(WP_PLUGIN_DIR . $this->_plugin_dir . $this->_fonts_dir);
+		$fonts_dir = WP_PLUGIN_DIR . $this->_plugin_dir . $this->_fonts_dir;
 		
 		$fonts = array();
-		foreach($dir as $file) {
-			if($file->isFile()) {
-				$font = pathinfo($file->getFilename());
-				
-				if($font['extension'] == 'ttf') {
-					$fonts[$font['filename']] = str_replace('_', ' ', $font['filename']);	
+		try {
+			$dir = new DirectoryIterator($fonts_dir);
+	
+			foreach($dir as $file) {
+				if($file->isFile()) {
+					$font = pathinfo($file->getFilename());
+					
+					if($font['extension'] == 'ttf') {
+						if(!$file->isReadable()) {
+							$this->_messages['unreadable-font'] = sprintf('Some fonts might be unreadable, try chmoding contents of the folder <strong>%s</string> to writable and refresh this page.', $this->_plugin_dir . $this->_fonts_dir);
+						}
+
+						$fonts[$font['filename']] = str_replace('_', ' ', $font['filename']);	
+					}
 				}
 			}
-		}
-		
-		ksort($fonts);
+			
+			ksort($fonts);
+		} catch(Exception $e) {}
 		
 		return $fonts;
 	}
@@ -463,13 +484,29 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 					update_option($option, $_POST[$option]);
 				}
 			}
+
+			$this->_messages['updated'][] = 'Options updated!';
+		}
+
+		if( !extension_loaded( 'gd' ) ) {
+			$this->_messages['error'][] = 'Watermark RELOADED will not work without PHP extension GD.';
+			
+			$gd_info = gd_info();
+			if ( !$gd_info['FreeType Support'] ) {
+				$this->_messages['error'] = 'Text watermarking requires FreeType Library.';
+			}
+		}
+	
+		foreach($this->_messages as $namespace => $messages) {
+			foreach($messages as $message) {
 ?>
-<div class="updated">
+<div class="<?php echo $namespace; ?>">
 	<p>
-		<strong>Options updated!</strong>
+		<strong><?php echo $message; ?></strong>
 	</p>
 </div>
-<?php	
+<?php
+			}
 		}
 ?>
 <script type="text/javascript">var wpurl = "<?php bloginfo('wpurl'); ?>";</script>
