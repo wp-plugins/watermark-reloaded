@@ -26,3 +26,18 @@ td.wr_width {
 .form-table, .form-table th.nowidth {
 	width: auto;	
 }
+
+/* color selector style */
+.colorSelector {
+	width: 36px;
+	height: 36px;
+	display: none;
+	margin-top: -5px;
+}
+
+.colorSelector div {
+	width: 28px;
+	height: 28px;
+	position: relative;
+	background: url(jQueryPlugins/colorpicker/images/select2.png) no-repeat scroll center center;
+}

@@ -6,7 +6,7 @@ class Watermark_Reloaded {
 	 *
 	 * @var string
 	 */
-	private $_version               = '1.0.2';
+	private $_version               = '1.1';
 	
 	/**
 	 * Array with default options
@@ -432,13 +432,27 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 		$plugin_page = add_options_page('Watermark Reloaded Options', 'Watermark Reloaded', 8, __FILE__, array(&$this, 'optionsPage'));
 
 		add_action('admin_print_styles-' . $plugin_page,  array(&$this, 'installStyles'));
+		add_action('admin_print_scripts-' . $plugin_page, array(&$this, 'installScripts'));
 	}
 	
 	/**
 	 * Include styles used by Watermark RELOADED
 	 */
-	public function installStyles() {		
+	public function installStyles() {
+		// Colorpicker
+		wp_enqueue_style('jquery-colorpicker', WP_PLUGIN_URL . $this->_plugin_dir . 'jQueryPlugins/colorpicker/css/colorpicker.css');
+		
 		wp_enqueue_style('watermark-reloaded', WP_PLUGIN_URL . $this->_plugin_dir . 'style.css');
+	}
+	
+	/**
+	 * Include scripts used by Watermark RELOADED
+	 */
+	public function installScripts() {
+		// Colorpicker
+		wp_enqueue_script('jquery-colorpicker', WP_PLUGIN_URL . $this->_plugin_dir . 'jQueryPlugins/colorpicker/js/colorpicker.js');
+
+		wp_enqueue_script('watermark-reloaded', WP_PLUGIN_URL . $this->_plugin_dir . 'script.js', $this->_version);
 	}
 	
 	/**

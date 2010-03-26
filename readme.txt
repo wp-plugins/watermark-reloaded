@@ -4,7 +4,7 @@ Donate link: http://randomplac.es/wordpress-plugins/donate/
 Tags: watermark, images, upload, Post, admin
 Requires at least: 2.9
 Tested up to: 2.9.2
-Stable tag: 1.0.2
+Stable tag: 1.1
 
 Add watermark to your uploaded images and customize your watermark appearance in user friendly settings page.
 
@@ -18,6 +18,10 @@ Requirements:
 * PHP5
 * GD extension for PHP
 * FreeType Library
+
+To-do:
+
+* Analyze option of watermarking aditional image sizes
 
 == Installation ==
 
@@ -64,3 +68,6 @@ No there's no way to watermark previously uploaded images and probably this feau
 * Added FreeType Library dependency check
 * Rewritten error messages output
 * Added donations link
+
+= 1.1 =
+* Added color picker for changing text watermark color
