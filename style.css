@@ -18,6 +18,10 @@ td.wr_width {
 	width: 100%;	
 }
 
+.wr_width [name="watermark_text[color]"] {
+	width: 55px;	
+}
+
 .wr_right {
 	width: none;
 	text-align: right;
@@ -29,10 +33,11 @@ td.wr_width {
 
 /* color selector style */
 .colorSelector {
+	left:70px;
+	top: -26px;
 	width: 36px;
 	height: 36px;
-	display: none;
-	margin-top: -5px;
+	position:relative;
 }
 
 .colorSelector div {

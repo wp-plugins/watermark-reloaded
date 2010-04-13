@@ -6,7 +6,7 @@ class Watermark_Reloaded {
 	 *
 	 * @var string
 	 */
-	private $_version               = '1.1';
+	private $_version               = '1.2';
 	
 	/**
 	 * Array with default options
@@ -14,6 +14,8 @@ class Watermark_Reloaded {
 	 * @var array
 	 */
 	protected $_options             = array(
+		'watermark_donated'  => 0,
+		'watermark_hide_nag' => 0,
 		'watermark_on'       => array(),
 		'watermark_position' => 'bottom_right',
 		'watermark_offset'   => array(
@@ -34,6 +36,13 @@ class Watermark_Reloaded {
 	 * @var string
 	 */
 	protected $_plugin_dir          = null;
+	
+	/**
+	 * Settings url
+	 *
+	 * @var string
+	 */
+	protected $_settings_url        = null;
 	
 	/**
 	 * Path to dir containing fonts
@@ -97,6 +106,40 @@ class Watermark_Reloaded {
 		foreach($this->_options as $option => $value) {
 			add_option($option, $value, null, 'no');	
 		}
+	}
+	
+	/**
+	 * Create preview for admin
+	 *
+	 * @param array $opt
+	 */
+	public function createPreview(array $opt) {
+		// merge custom settings with default settings
+		$opt = $this->mergeConfArray($this->_options, $opt);
+		
+		// calculate required size of image
+		$bbox = $this->calculateBBox($opt);
+		$size = array(
+			'width'  => $bbox['width']  + $this->_options['watermark_offset']['x'] * 2,
+			'height' =>	$bbox['height'] + $this->_options['watermark_offset']['y'] * 2
+		);
+
+		// Create the image
+		$image = imagecreatetruecolor($size['width'], $size['height']);
+
+		// Add some background to image (#CCCCCC)
+		$color = imagecolorallocate($image, 204, 204, 204);
+		imagefilledrectangle($image, 0, 0, $size['width'], $size['height'], $color);
+		
+		// And finaly write text to image
+		$this->imageAddText($image, $opt);
+		
+		// Set the content-type
+		header('Content-type: image/png');
+		
+		// Output the image using imagepng()
+		imagepng($image);
+		imagedestroy($image);
 	}
 	
 	/**
@@ -383,24 +426,43 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 	 *
 	 */
 	public function __construct() {
-		$this->_plugin_dir = DIRECTORY_SEPARATOR . str_replace(basename(__FILE__), null, plugin_basename(__FILE__)); 
+		$this->_plugin_dir   = DIRECTORY_SEPARATOR . str_replace(basename(__FILE__), null, plugin_basename(__FILE__));
+		$this->_settings_url = 'options-general.php?page=' . plugin_basename(__FILE__);;
 		
-		// register installer function
-		register_activation_hook(WR_LOADER, array(&$this, 'activateWatermark'));
+		$allowed_options = array(
+			'watermark_donated',
+			'watermark_hide_nag'
+		);
 		
-		// add plugin "Settings" action on plugin list
-		add_action('plugin_action_links_' . plugin_basename(WR_LOADER), array(&$this, 'add_plugin_actions'));
-		
-		// add links for plugin help, donations,...
-		add_filter('plugin_row_meta', array(&$this, 'add_plugin_links'), 10, 2);
-		
-		// push options page link, when generating admin menu
-		add_action('admin_menu', array(&$this, 'adminMenu'));
-
-		// check if post_id is "-1", meaning we're uploading watermark image
-		if(!(array_key_exists('post_id', $_REQUEST) && $_REQUEST['post_id'] == -1)) {
-			// add filter for watermarking images
-			add_filter('wp_generate_attachment_metadata', array(&$this, 'applyWatermark'));
+		// set watermark options
+		if(array_key_exists('option_name', $_GET) && array_key_exists('option_value', $_GET)
+			&& in_array($_GET['option_name'], $allowed_options)) {
+			update_option($_GET['option_name'], $_GET['option_value']);
+			
+			header("Location: " . $this->_settings_url);
+			die();	
+		// if user requested preview display preview image
+		} elseif(array_key_exists('watermarkPreview', $_GET)) {
+			$this->createPreview($_GET);
+			die();
+		} else {
+			// register installer function
+			register_activation_hook(WR_LOADER, array(&$this, 'activateWatermark'));
+			
+			// add plugin "Settings" action on plugin list
+			add_action('plugin_action_links_' . plugin_basename(WR_LOADER), array(&$this, 'add_plugin_actions'));
+			
+			// add links for plugin help, donations,...
+			add_filter('plugin_row_meta', array(&$this, 'add_plugin_links'), 10, 2);
+			
+			// push options page link, when generating admin menu
+			add_action('admin_menu', array(&$this, 'adminMenu'));
+	
+			// check if post_id is "-1", meaning we're uploading watermark image
+			if(!(array_key_exists('post_id', $_REQUEST) && $_REQUEST['post_id'] == -1)) {
+				// add filter for watermarking images
+				add_filter('wp_generate_attachment_metadata', array(&$this, 'applyWatermark'));
+			}
 		}
 	}
 	
@@ -488,6 +550,40 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 	}
 	
 	/**
+	 * Nag a little bit for Donation :)
+	 */
+	private function donationsNag() {
+		$is_one_month = time() - $this->get_option('watermark_installed') > 60 * 60 * 24 * 30;
+		if($is_one_month && !$this->get_option('watermark_donated') && !$this->get_option('watermark_hide_nag')) {
+			$this->_messages['updated'][] = '<strong>' . PHP_EOL .
+				'Thanks for using this plugin! You\'ve installed this plugin over a month ago.' . PHP_EOL .
+				'If it works and you are satisfied with the results, isn\'t it worth at least a few Euros/Dollars?' . PHP_EOL .
+				'Donations  help me to continue support and development of this <em>free</em> software!' . PHP_EOL .
+				'<a href="http://randomplac.es/wordpress-plugins/donate/" target="_blank">Sure, no problem!</a>' . PHP_EOL .
+				'<a href="' . $this->_settings_url . '&option_name=watermark_donated&option_value=1" style="float: right; display: block; border: none; margin-left:10px;">' . PHP_EOL .
+					'<small style="font-weight: normal;">' . PHP_EOL .
+						'Sure, but I already did!' . PHP_EOL .
+					'</small>' . PHP_EOL .
+				'</a>' . PHP_EOL .
+				'<a href="' . $this->_settings_url . '&option_name=watermark_hide_nag&option_value=1" style="float: right; display: block; border: none;">' . PHP_EOL .
+					'<small style="font-weight: normal;">' . PHP_EOL .
+						'No thanks, please don\'t bug me anymore!' . PHP_EOL .
+					'</small>' . PHP_EOL .
+				'</a>' . PHP_EOL .
+				'</strong>';
+		} elseif($this->get_option('watermark_donated') && !$this->get_option('watermark_hide_nag')) {
+			$this->_messages['updated'][] = '<strong>' . PHP_EOL .
+				'Thank you very much for your donation. You help me to continue support and development of this plugin and other free software!' . PHP_EOL .
+				'<a href="' . $this->_settings_url . '&option_name=watermark_hide_nag&option_value=1">' . PHP_EOL .
+					'<small style="font-weight: normal;">' . PHP_EOL .
+						'Hide this notice' . PHP_EOL .
+					'</small>' . PHP_EOL .
+				'</a>' . PHP_EOL .
+				'</strong>';
+		}
+	}
+	
+	/**
 	 * Display options page
 	 */
 	public function optionsPage() {
@@ -510,6 +606,9 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 				$this->_messages['error'] = 'Text watermarking requires FreeType Library.';
 			}
 		}
+		
+		// add donations nag messages
+		$this->donationsNag();
 	
 		foreach($this->_messages as $namespace => $messages) {
 			foreach($messages as $message) {
@@ -617,6 +716,7 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 							
 							</fieldset>
 						</td>
+						<th scope="row" class="nowidth">Preview</th>
 					</tr>
 
 					<tr valign="top">
@@ -637,6 +737,9 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 								</select>
 							
 							</fieldset>
+						</td>
+						<td rowspan="3">
+							<img id="previewImg_text" src="" alt="" />
 						</td>
 					</tr>
 					
