@@ -6,7 +6,7 @@ class Watermark_Reloaded {
 	 *
 	 * @var string
 	 */
-	private $_version               = '1.2';
+	private $_version               = '1.2.1';
 	
 	/**
 	 * Array with default options

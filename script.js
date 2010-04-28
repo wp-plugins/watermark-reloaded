@@ -3,7 +3,7 @@ jQuery(document).ready(function() {
 	updatePreview = function() {
 		jQuery('#previewImg_text').show();
 
-		jQuery('#previewImg_text').attr('src', location.href + '&watermarkPreview&' + unescape(jQuery('#watermark_text input, #watermark_text select').serialize()));
+		jQuery('#previewImg_text').attr('src', location.href + '&watermarkPreview&' + jQuery('#watermark_text input, #watermark_text select').serialize());
 	}
 	jQuery('#watermark_text input:text').keyup(updatePreview);
 	jQuery('#watermark_text select').change(updatePreview);

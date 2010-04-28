@@ -76,3 +76,6 @@ No there's no way to watermark previously uploaded images and probably this feau
 * Added color picker for changing text watermark color
 * Added watermark preview
 * Added a little bit of a nagging for donation :)
+
+= 1.2.1 =
+* Fixed unicode chars bug
