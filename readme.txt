@@ -4,7 +4,7 @@ Donate link: http://randomplac.es/wordpress-plugins/donate/
 Tags: watermark, images, upload, Post, admin
 Requires at least: 2.9
 Tested up to: 2.9.2
-Stable tag: 1.2
+Stable tag: 1.2.1
 
 Add watermark to your uploaded images and customize your watermark appearance in user friendly settings page.
 
