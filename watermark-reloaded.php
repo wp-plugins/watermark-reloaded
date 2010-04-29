@@ -6,7 +6,7 @@ class Watermark_Reloaded {
 	 *
 	 * @var string
 	 */
-	private $_version               = '1.2.1';
+	public $version                 = '1.2.2';
 	
 	/**
 	 * Array with default options
@@ -514,7 +514,7 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 		// Colorpicker
 		wp_enqueue_script('jquery-colorpicker', WP_PLUGIN_URL . $this->_plugin_dir . 'jQueryPlugins/colorpicker/js/colorpicker.js');
 
-		wp_enqueue_script('watermark-reloaded', WP_PLUGIN_URL . $this->_plugin_dir . 'script.js', $this->_version);
+		wp_enqueue_script('watermark-reloaded', WP_PLUGIN_URL . $this->_plugin_dir . 'script.js', $this->version);
 	}
 	
 	/**
@@ -592,6 +592,8 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 			foreach($this->_options as $option => $value) {
 				if(array_key_exists($option, $_POST)) {
 					update_option($option, $_POST[$option]);
+				} else {
+					update_option($option, $value);
 				}
 			}
 
