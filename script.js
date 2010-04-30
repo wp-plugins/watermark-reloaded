@@ -1,4 +1,12 @@
 jQuery(document).ready(function() {
+	// call rel="ajax" links with ajax
+	jQuery('a[rel="ajax"]').click(function(eh) {
+		eh.preventDefault();
+
+		jQuery.get(jQuery(this).attr('href'));
+		jQuery(this).parents('div.updated, div.error').fadeOut('slow');
+	});
+	
 	// preview update trigger
 	updatePreview = function() {
 		jQuery('#previewImg_text').show();
