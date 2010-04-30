@@ -559,7 +559,7 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 	private function donationsNag() {
 		$is_one_month = time() - $this->get_option('watermark_installed') > 60 * 60 * 24 * 30;
 		if($is_one_month && !$this->get_option('watermark_donated') && !$this->get_option('watermark_hide_nag')) {
-			$this->_messages['updated'][] = '<strong>' . PHP_EOL .
+			$this->_messages['updated'][] =
 				'Thanks for using <a href="' . $this->_settings_url . '">Watermark RELOADED</a>! You\'ve installed this plugin over a month ago.' . PHP_EOL .
 				'If it works and you are satisfied with it, isn\'t it worth at least a few Euros/Dollars?' . PHP_EOL .
 				'Donations help me to continue support and development of this <em>free</em> software!' . PHP_EOL .
@@ -574,17 +574,15 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 						'No thanks, please don\'t bug me anymore!' . PHP_EOL .
 					'</small>' . PHP_EOL .
 				'</a>' . PHP_EOL .
-				'</strong>' . PHP_EOL .
 				'<br clear="both" />';
 		} elseif($this->get_option('watermark_donated') && !$this->get_option('watermark_hide_nag')) {
-			$this->_messages['updated'][] = '<strong>' . PHP_EOL .
+			$this->_messages['updated'][] =
 				'Thank you very much for your donation. You help me to continue support and development of this plugin and other free software!' . PHP_EOL .
 				'<a href="' . $this->_settings_url . '&option_name=watermark_hide_nag&option_value=1">' . PHP_EOL .
 					'<small style="font-weight: normal;">' . PHP_EOL .
 						'Hide this notice' . PHP_EOL .
 					'</small>' . PHP_EOL .
-				'</a>' . PHP_EOL .
-				'</strong>';
+				'</a>';
 		}
 	}
 	
@@ -600,7 +598,7 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 				foreach($messages as $message) {
 ?>
 <div class="<?php echo $namespace; ?>">
-	<p><a 
+	<p>
 		<strong><?php echo $message; ?></strong>
 	</p>
 </div>
