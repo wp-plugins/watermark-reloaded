@@ -3,7 +3,7 @@
 Plugin Name: Watermark RELOADED
 Plugin URI: http://randomplac.es/wordpress-plugins/watermark-reloaded/
 Description: Add watermark to your uploaded images and customize your watermark appearance in user friendly settings page.
-Version: 1.2.1
+Version: 1.2.3
 Author: Sandi Verdev
 Author URI: http://randomplac.es/
 */

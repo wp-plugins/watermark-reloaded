@@ -6,7 +6,7 @@ class Watermark_Reloaded {
 	 *
 	 * @var string
 	 */
-	private $_version               = '1.2.1';
+	public $version                 = '1.2.3';
 	
 	/**
 	 * Array with default options
@@ -349,7 +349,7 @@ class Watermark_Reloaded {
 	 * @return unknown
 	 */
 	private function getFontFullpath(array $opt) {
-		$opt['watermark_text']['font'] = WP_PLUGIN_DIR . $this->_plugin_dir . $this->_fonts_dir . $opt['watermark_text']['font'] . '.ttf';
+		$opt['watermark_text']['font'] = WP_PLUGIN_DIR . $this->_plugin_dir . $this->_fonts_dir . $opt['watermark_text']['font'];
 		
 		return $opt;
 	}
@@ -457,6 +457,8 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 			
 			// push options page link, when generating admin menu
 			add_action('admin_menu', array(&$this, 'adminMenu'));
+			
+			add_action('pre-upload-ui', array(&$this, 'uploadDonationsNag'));
 	
 			// check if post_id is "-1", meaning we're uploading watermark image
 			if(!(array_key_exists('post_id', $_REQUEST) && $_REQUEST['post_id'] == -1)) {
@@ -493,8 +495,10 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 		// add option in admin menu, for setting details on watermarking
 		$plugin_page = add_options_page('Watermark Reloaded Options', 'Watermark Reloaded', 8, __FILE__, array(&$this, 'optionsPage'));
 
-		add_action('admin_print_styles-' . $plugin_page,  array(&$this, 'installStyles'));
-		add_action('admin_print_scripts-' . $plugin_page, array(&$this, 'installScripts'));
+		add_action('admin_print_styles-' . $plugin_page,     array(&$this, 'installStyles'));
+		add_action('admin_print_scripts-' . $plugin_page,    array(&$this, 'installScripts'));
+		// also add JS to media upload popup
+		add_action('admin_print_scripts-media-upload-popup', array(&$this, 'installScripts'));
 	}
 	
 	/**
@@ -514,7 +518,7 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 		// Colorpicker
 		wp_enqueue_script('jquery-colorpicker', WP_PLUGIN_URL . $this->_plugin_dir . 'jQueryPlugins/colorpicker/js/colorpicker.js');
 
-		wp_enqueue_script('watermark-reloaded', WP_PLUGIN_URL . $this->_plugin_dir . 'script.js', $this->_version);
+		wp_enqueue_script('watermark-reloaded', WP_PLUGIN_URL . $this->_plugin_dir . 'script.js', $this->version);
 	}
 	
 	/**
@@ -533,12 +537,12 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 				if($file->isFile()) {
 					$font = pathinfo($file->getFilename());
 					
-					if($font['extension'] == 'ttf') {
+					if(strtolower($font['extension']) == 'ttf') {
 						if(!$file->isReadable()) {
 							$this->_messages['unreadable-font'] = sprintf('Some fonts might be unreadable, try chmoding contents of the folder <strong>%s</string> to writable and refresh this page.', $this->_plugin_dir . $this->_fonts_dir);
 						}
 
-						$fonts[$font['filename']] = str_replace('_', ' ', $font['filename']);	
+						$fonts[$font['basename']] = str_replace('_', ' ', $font['filename']);	
 					}
 				}
 			}
@@ -548,7 +552,7 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 		
 		return $fonts;
 	}
-	
+
 	/**
 	 * Nag a little bit for Donation :)
 	 */
@@ -556,21 +560,22 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 		$is_one_month = time() - $this->get_option('watermark_installed') > 60 * 60 * 24 * 30;
 		if($is_one_month && !$this->get_option('watermark_donated') && !$this->get_option('watermark_hide_nag')) {
 			$this->_messages['updated'][] = '<strong>' . PHP_EOL .
-				'Thanks for using this plugin! You\'ve installed this plugin over a month ago.' . PHP_EOL .
-				'If it works and you are satisfied with the results, isn\'t it worth at least a few Euros/Dollars?' . PHP_EOL .
-				'Donations  help me to continue support and development of this <em>free</em> software!' . PHP_EOL .
+				'Thanks for using <a href="' . $this->_settings_url . '">Watermark RELOADED</a>! You\'ve installed this plugin over a month ago.' . PHP_EOL .
+				'If it works and you are satisfied with it, isn\'t it worth at least a few Euros/Dollars?' . PHP_EOL .
+				'Donations help me to continue support and development of this <em>free</em> software!' . PHP_EOL .
 				'<a href="http://randomplac.es/wordpress-plugins/donate/" target="_blank">Sure, no problem!</a>' . PHP_EOL .
-				'<a href="' . $this->_settings_url . '&option_name=watermark_donated&option_value=1" style="float: right; display: block; border: none; margin-left:10px;">' . PHP_EOL .
+				'<a href="' . $this->_settings_url . '&option_name=watermark_donated&option_value=1" rel="ajax" style="float: right; display: block; border: none; margin: 3px 0 0 10px;">' . PHP_EOL .
 					'<small style="font-weight: normal;">' . PHP_EOL .
 						'Sure, but I already did!' . PHP_EOL .
 					'</small>' . PHP_EOL .
 				'</a>' . PHP_EOL .
-				'<a href="' . $this->_settings_url . '&option_name=watermark_hide_nag&option_value=1" style="float: right; display: block; border: none;">' . PHP_EOL .
+				'<a href="' . $this->_settings_url . '&option_name=watermark_hide_nag&option_value=1" rel="ajax" style="float: right; display: block; border: none; margin: 3px 0 0;">' . PHP_EOL .
 					'<small style="font-weight: normal;">' . PHP_EOL .
 						'No thanks, please don\'t bug me anymore!' . PHP_EOL .
 					'</small>' . PHP_EOL .
 				'</a>' . PHP_EOL .
-				'</strong>';
+				'</strong>' . PHP_EOL .
+				'<br clear="both" />';
 		} elseif($this->get_option('watermark_donated') && !$this->get_option('watermark_hide_nag')) {
 			$this->_messages['updated'][] = '<strong>' . PHP_EOL .
 				'Thank you very much for your donation. You help me to continue support and development of this plugin and other free software!' . PHP_EOL .
@@ -584,6 +589,28 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 	}
 	
 	/**
+	 * Nag for Donation in image upload form
+	 */
+	public function uploadDonationsNag() {
+		$this->donationsNag();
+
+		$watermark_on = $this->get_option('watermark_on');
+		if( !empty( $watermark_on ) ) {
+			foreach($this->_messages as $namespace => $messages) {
+				foreach($messages as $message) {
+?>
+<div class="<?php echo $namespace; ?>">
+	<p><a 
+		<strong><?php echo $message; ?></strong>
+	</p>
+</div>
+<?php
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Display options page
 	 */
 	public function optionsPage() {
@@ -592,6 +619,8 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 			foreach($this->_options as $option => $value) {
 				if(array_key_exists($option, $_POST)) {
 					update_option($option, $_POST[$option]);
+				} else {
+					update_option($option, $value);
 				}
 			}
 
