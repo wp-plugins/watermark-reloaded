@@ -6,7 +6,7 @@ class Watermark_Reloaded {
 	 *
 	 * @var string
 	 */
-	public $version                 = '1.2.3';
+	public $version                 = '1.2.4';
 	
 	/**
 	 * Array with default options
@@ -24,7 +24,7 @@ class Watermark_Reloaded {
 		),
 		'watermark_text'     => array(
 			'value' => null,
-			'font'  => 'Arial',
+			'font'  => 'Arial.ttf',
 			'size'  => 20,
 			'color' => '000000'
 		)
@@ -448,6 +448,13 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 		} else {
 			// register installer function
 			register_activation_hook(WR_LOADER, array(&$this, 'activateWatermark'));
+			
+			// patch for the fonts fix in previous versions
+			$watermark_text = get_option('watermark_text');
+			if(false === strpos(strtolower($watermark_text['font']), 'ttf')) {
+				$watermark_text['font'] = $watermark_text['font'] . '.ttf';
+				update_option('watermark_text', $watermark_text);
+			}
 			
 			// add plugin "Settings" action on plugin list
 			add_action('plugin_action_links_' . plugin_basename(WR_LOADER), array(&$this, 'add_plugin_actions'));
