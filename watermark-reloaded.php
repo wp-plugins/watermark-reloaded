@@ -6,7 +6,7 @@ class Watermark_Reloaded {
 	 *
 	 * @var string
 	 */
-	public $version                 = '1.2.4';
+	public $version                 = '1.2.5';
 	
 	/**
 	 * Array with default options
@@ -58,7 +58,13 @@ class Watermark_Reloaded {
 	 * @return mixed
 	 */
 	protected function get_option($setting) {
-		return get_option($setting, $this->_options[$setting]);
+	    if(is_array($this->_options[$setting])) {
+	        $options = array_merge($this->_options[$setting], get_option($setting));
+	    } else {
+	        $options = get_option($setting, $this->_options[$setting]);
+	    }
+
+	    return $options;
 	}
 	
 	/**
@@ -308,7 +314,7 @@ class Watermark_Reloaded {
 	private function calculateBBox(array $opt) {
 		// http://ruquay.com/sandbox/imagettf/
 		$opt = $this->getFontFullpath($opt);
-		
+
 		$bbox = imagettfbbox(
 			$opt['watermark_text']['size'],
 			0,
