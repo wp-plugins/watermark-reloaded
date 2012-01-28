@@ -7,7 +7,7 @@ class Watermark_Reloaded {
 	 * @var string
 	 */
 	public $version                 = '1.2.5';
-	
+
 	/**
 	 * Array with default options
 	 *
@@ -29,28 +29,28 @@ class Watermark_Reloaded {
 			'color' => '000000'
 		)
 	);
-	
+
 	/**
 	 * Plugin work path
 	 *
 	 * @var string
 	 */
 	protected $_plugin_dir          = null;
-	
+
 	/**
 	 * Settings url
 	 *
 	 * @var string
 	 */
 	protected $_settings_url        = null;
-	
+
 	/**
 	 * Path to dir containing fonts
 	 *
 	 * @var string
 	 */
 	protected $_fonts_dir           = 'fonts/';
-	
+
 	/**
 	 * Get option by setting name with default value if option is unexistent
 	 *
@@ -66,7 +66,7 @@ class Watermark_Reloaded {
 
 	    return $options;
 	}
-	
+
 	/**
 	 * Get array with options
 	 *
@@ -74,15 +74,15 @@ class Watermark_Reloaded {
 	 */
 	private function get_options() {
 		$options = array();
-		
+
 		// loop through default options and get user defined options
 		foreach($this->_options as $option => $value) {
 			$options[$option] = $this->get_option($option);
 		}
-		
+
 		return $options;
 	}
-	
+
 	/**
 	 * Merge configuration array with the default one
 	 *
@@ -100,20 +100,20 @@ class Watermark_Reloaded {
 
 		return $default;
     }
-	
+
 	/**
 	 * Plugin installation method
 	 */
 	public function activateWatermark() {
 		// record install time
 		add_option('watermark_installed', time(), null, 'no');
-				
+
 		// loop through default options and add them into DB
 		foreach($this->_options as $option => $value) {
-			add_option($option, $value, null, 'no');	
+			add_option($option, $value, null, 'no');
 		}
 	}
-	
+
 	/**
 	 * Create preview for admin
 	 *
@@ -122,7 +122,7 @@ class Watermark_Reloaded {
 	public function createPreview(array $opt) {
 		// merge custom settings with default settings
 		$opt = $this->mergeConfArray($this->_options, $opt);
-		
+
 		// calculate required size of image
 		$bbox = $this->calculateBBox($opt);
 		$size = array(
@@ -136,18 +136,18 @@ class Watermark_Reloaded {
 		// Add some background to image (#CCCCCC)
 		$color = imagecolorallocate($image, 204, 204, 204);
 		imagefilledrectangle($image, 0, 0, $size['width'], $size['height'], $color);
-		
+
 		// And finaly write text to image
 		$this->imageAddText($image, $opt);
-		
+
 		// Set the content-type
 		header('Content-type: image/png');
-		
+
 		// Output the image using imagepng()
 		imagepng($image);
 		imagedestroy($image);
 	}
-	
+
 	/**
 	 * Apply watermark to selected image sizes
 	 *
@@ -172,9 +172,9 @@ class Watermark_Reloaded {
 						} else {
 							// early getaway
 							continue 2;
-						}	
+						}
 				}
-				
+
 				// ... and apply watermark
 				$this->doWatermark($filepath);
 			}
@@ -183,7 +183,7 @@ class Watermark_Reloaded {
 		// pass forward attachment metadata
 		return $data;
 	}
-	
+
 	/**
 	 * Apply watermark to certain image
 	 *
@@ -194,7 +194,7 @@ class Watermark_Reloaded {
 		// get image mime type
 		$mime_type = wp_check_filetype($filepath);
 		$mime_type = $mime_type['type'];
-		
+
 		// get watermark settings
 		$options = $this->get_options();
 
@@ -207,7 +207,7 @@ class Watermark_Reloaded {
 		// save watermarked image
 		return $this->saveImageFile($image, $mime_type, $filepath);
 	}
-	
+
 	/**
 	 * Add watermark text to image
 	 *
@@ -218,17 +218,17 @@ class Watermark_Reloaded {
 	private function imageAddText($image, array $opt) {
 		// allocate text color
 		$color  = $this->imageColorAllocateHex($image, $opt['watermark_text']['color']);
-		
+
 		// calculate watermark position and get full path to font file
 		$offset = $this->calculateOffset($image, $opt);
 		$opt    = $this->getFontFullpath($opt);
 
 		// Add the text to image
 		imagettftext($image, $opt['watermark_text']['size'], 0, $offset['x'], $offset['y'], $color, $opt['watermark_text']['font'], $opt['watermark_text']['value']);
-		
+
 		return $image;
 	}
-	
+
 	/**
 	 * Allocate a color for an image from HEX code
 	 *
@@ -245,7 +245,7 @@ class Watermark_Reloaded {
 			0xFF & $int
 		);
 	}
-	
+
 	/**
 	 * Calculate offset acording to watermark alignment
 	 *
@@ -261,7 +261,7 @@ class Watermark_Reloaded {
 		$bbox   = $this->calculateBBox($opt);
 
 		list($ypos, $xpos) = explode('_', $opt['watermark_position']);
-		
+
 		// calculate offset according to equations bellow
 		switch($xpos) {
 			default:
@@ -275,7 +275,7 @@ class Watermark_Reloaded {
 				$offset['x'] = $isize['x'] - $bbox['bottom_right']['x'] - $opt['watermark_offset']['x'];
 				break;
 		}
-		
+
 		switch($ypos) {
 			default:
 			case 'top':
@@ -291,7 +291,7 @@ class Watermark_Reloaded {
 
 		return $offset;
 	}
-	
+
 	/**
 	 * Get array with image size
 	 *
@@ -304,7 +304,7 @@ class Watermark_Reloaded {
 			'y' => imagesy($image)
 		);
 	}
-	
+
 	/**
 	 * Calculate bounding box of watermark
 	 *
@@ -340,14 +340,14 @@ class Watermark_Reloaded {
 				'y' => $bbox[7]
 			)
 		);
-		
+
 		// calculate width & height of text
 		$bbox['width']  = $bbox['top_right']['x'] - $bbox['top_left']['x'];
 		$bbox['height'] = $bbox['bottom_left']['y'] - $bbox['top_left']['y'];
-		
+
 		return $bbox;
 	}
-	
+
 	/**
 	 * Get fullpath of font
 	 *
@@ -356,10 +356,10 @@ class Watermark_Reloaded {
 	 */
 	private function getFontFullpath(array $opt) {
 		$opt['watermark_text']['font'] = WP_PLUGIN_DIR . $this->_plugin_dir . $this->_fonts_dir . $opt['watermark_text']['font'];
-		
+
 		return $opt;
 	}
-	
+
 	/**
 	 * Get image resource accordingly to mimetype
 	 *
@@ -379,7 +379,7 @@ class Watermark_Reloaded {
 				return false;
 		}
 	}
-	
+
 	/**
 	 * Save image from image resource
 	 *
@@ -409,14 +409,14 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 	 * @var array
 	 */
 	private $_messages = array();
-	
+
 	/**
 	 * List of available image sizes
 	 *
 	 * @var array
 	 */
 	private $_image_sizes         = array('thumbnail', 'medium', 'large', 'fullsize');
-	
+
 	/**
 	 * List of available watermark positions
 	 *
@@ -426,7 +426,7 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 		'x' => array('left', 'center', 'right'),
 		'y' => array('top', 'middle', 'bottom')
 	);
-	
+
 	/**
 	 * Class constructor
 	 *
@@ -434,19 +434,19 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 	public function __construct() {
 		$this->_plugin_dir   = DIRECTORY_SEPARATOR . str_replace(basename(__FILE__), null, plugin_basename(__FILE__));
 		$this->_settings_url = 'options-general.php?page=' . plugin_basename(__FILE__);;
-		
+
 		$allowed_options = array(
 			'watermark_donated',
 			'watermark_hide_nag'
 		);
-		
+
 		// set watermark options
 		if(array_key_exists('option_name', $_GET) && array_key_exists('option_value', $_GET)
 			&& in_array($_GET['option_name'], $allowed_options)) {
 			update_option($_GET['option_name'], $_GET['option_value']);
-			
+			// @TODO: use ajax
 			header("Location: " . $this->_settings_url);
-			die();	
+			die();
 		// if user requested preview display preview image
 		} elseif(array_key_exists('watermarkPreview', $_GET)) {
 			$this->createPreview($_GET);
@@ -454,25 +454,25 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 		} else {
 			// register installer function
 			register_activation_hook(WR_LOADER, array(&$this, 'activateWatermark'));
-			
+
 			// patch for the fonts fix in previous versions
 			$watermark_text = get_option('watermark_text');
 			if(false === strpos(strtolower($watermark_text['font']), 'ttf')) {
 				$watermark_text['font'] = $watermark_text['font'] . '.ttf';
 				update_option('watermark_text', $watermark_text);
 			}
-			
+
 			// add plugin "Settings" action on plugin list
 			add_action('plugin_action_links_' . plugin_basename(WR_LOADER), array(&$this, 'add_plugin_actions'));
-			
+
 			// add links for plugin help, donations,...
 			add_filter('plugin_row_meta', array(&$this, 'add_plugin_links'), 10, 2);
-			
+
 			// push options page link, when generating admin menu
 			add_action('admin_menu', array(&$this, 'adminMenu'));
-			
+
 			add_action('pre-upload-ui', array(&$this, 'uploadDonationsNag'));
-	
+
 			// check if post_id is "-1", meaning we're uploading watermark image
 			if(!(array_key_exists('post_id', $_REQUEST) && $_REQUEST['post_id'] == -1)) {
 				// add filter for watermarking images
@@ -480,16 +480,16 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 			}
 		}
 	}
-	
+
 	/**
 	 * Add "Settings" action on installed plugin list
 	 */
 	public function add_plugin_actions($links) {
 		array_unshift($links, '<a href="options-general.php?page=' . plugin_basename(__FILE__) . '">' . __('Settings') . '</a>');
-		
+
 		return $links;
 	}
-	
+
 	/**
 	 * Add links on installed plugin list
 	 */
@@ -497,14 +497,14 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 		if($file == plugin_basename(WR_LOADER)) {
 			$links[] = '<a href="http://randomplac.es/wordpress-plugins/donate/">Donate</a>';
 		}
-		
+
 		return $links;
 	}
-	
+
 	/**
 	 * Add menu entry for Watermark RELOADED settings and attach style and script include methods
 	 */
-	public function adminMenu() {		
+	public function adminMenu() {
 		// add option in admin menu, for setting details on watermarking
 		$plugin_page = add_options_page('Watermark Reloaded Options', 'Watermark Reloaded', 8, __FILE__, array(&$this, 'optionsPage'));
 
@@ -513,17 +513,17 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 		// also add JS to media upload popup
 		add_action('admin_print_scripts-media-upload-popup', array(&$this, 'installScripts'));
 	}
-	
+
 	/**
 	 * Include styles used by Watermark RELOADED
 	 */
 	public function installStyles() {
 		// Colorpicker
 		wp_enqueue_style('jquery-colorpicker', WP_PLUGIN_URL . $this->_plugin_dir . 'jQueryPlugins/colorpicker/css/colorpicker.css');
-		
+
 		wp_enqueue_style('watermark-reloaded', WP_PLUGIN_URL . $this->_plugin_dir . 'style.css');
 	}
-	
+
 	/**
 	 * Include scripts used by Watermark RELOADED
 	 */
@@ -533,7 +533,7 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 
 		wp_enqueue_script('watermark-reloaded', WP_PLUGIN_URL . $this->_plugin_dir . 'script.js', $this->version);
 	}
-	
+
 	/**
 	 * List available fonts from fonts dir
 	 *
@@ -541,28 +541,28 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 	 */
 	private function getFonts() {
 		$fonts_dir = WP_PLUGIN_DIR . $this->_plugin_dir . $this->_fonts_dir;
-		
+
 		$fonts = array();
 		try {
 			$dir = new DirectoryIterator($fonts_dir);
-	
+
 			foreach($dir as $file) {
 				if($file->isFile()) {
 					$font = pathinfo($file->getFilename());
-					
+
 					if(strtolower($font['extension']) == 'ttf') {
 						if(!$file->isReadable()) {
 							$this->_messages['unreadable-font'] = sprintf('Some fonts might be unreadable, try chmoding contents of the folder <strong>%s</string> to writable and refresh this page.', $this->_plugin_dir . $this->_fonts_dir);
 						}
 
-						$fonts[$font['basename']] = str_replace('_', ' ', $font['filename']);	
+						$fonts[$font['basename']] = str_replace('_', ' ', $font['filename']);
 					}
 				}
 			}
-			
+
 			ksort($fonts);
 		} catch(Exception $e) {}
-		
+
 		return $fonts;
 	}
 
@@ -598,7 +598,7 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 				'</a>';
 		}
 	}
-	
+
 	/**
 	 * Nag for Donation in image upload form
 	 */
@@ -620,7 +620,7 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 			}
 		}
 	}
-	
+
 	/**
 	 * Display options page
 	 */
@@ -640,16 +640,16 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 
 		if( !extension_loaded( 'gd' ) ) {
 			$this->_messages['error'][] = 'Watermark RELOADED will not work without PHP extension GD.';
-			
+
 			$gd_info = gd_info();
 			if ( !$gd_info['FreeType Support'] ) {
 				$this->_messages['error'] = 'Text watermarking requires FreeType Library.';
 			}
 		}
-		
+
 		// add donations nag messages
 		$this->donationsNag();
-	
+
 		foreach($this->_messages as $namespace => $messages) {
 			foreach($messages as $message) {
 ?>
@@ -674,30 +674,30 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 					<td>
 						<fieldset>
 						<legend class="screen-reader-text"><span>Enable watermark for</span></legend>
-						
+
 						<?php $watermark_on = array_keys($this->get_option('watermark_on')); ?>
 						<?php foreach($this->_image_sizes as $image_size) : ?>
-							
+
 							<?php $checked = in_array($image_size, $watermark_on); ?>
-						
+
 							<label>
 								<input name="watermark_on[<?php echo $image_size; ?>]" type="checkbox" id="watermark_on_<?php echo $image_size; ?>" value="1"<?php echo $checked ? ' checked="checked"' : null; ?> />
 								<?php echo ucfirst($image_size); ?>
 							</label>
 							<br />
 						<?php endforeach; ?>
-						
-							<span class="description">Check image sizes on which watermark should appear.</span>						
+
+							<span class="description">Check image sizes on which watermark should appear.</span>
 						</fieldset>
 					</td>
 				</tr>
-				
+
 				<tr valign="top">
 					<th scope="row">Watermark alignment</th>
 					<td>
 						<fieldset>
 						<legend class="screen-reader-text"><span>Watermark alignment</span></legend>
-						
+
 							<table id="watermark_position" border="1">
 
 								<?php $watermark_position = $this->get_option('watermark_position'); ?>
@@ -713,13 +713,13 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 								</tr>
 								<?php endforeach; ?>
 							</table>
-							
+
 							<span class="description">Chose where on image watermark should be positioned.</span>
 
 						</fieldset>
 					</td>
 				</tr>
-				
+
 				<tr valign="top">
 					<th scope="row">Watermark offset</th>
 					<td>
@@ -727,8 +727,8 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 						<legend class="screen-reader-text"><span>Watermark offset</span></legend>
 
 							<?php $watermark_offset = $this->get_option('watermark_offset'); ?>
-							
-							<?php foreach(array('x', 'y') as $direction) : ?>							
+
+							<?php foreach(array('x', 'y') as $direction) : ?>
 							<?php echo $direction; ?>: <input class="wr_right" name="watermark_offset[<?php echo $direction; ?>]" type="text" value="<?php echo $watermark_offset[$direction]; ?>" size="2" />px<br />
 							<?php endforeach; ?>
 
@@ -745,15 +745,15 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 
 				<table class="form-table">
 					<?php $watermark_text = $this->get_option('watermark_text'); ?>
-					
+
 					<tr valign="top">
 						<th scope="row">Watermark text</th>
 						<td class="wr_width">
 							<fieldset class="wr_width">
 							<legend class="screen-reader-text"><span>Watermark text</span></legend>
-	
+
 								<input name="watermark_text[value]" type="text" value="<?php echo $watermark_text['value']; ?>" />
-							
+
 							</fieldset>
 						</td>
 						<th scope="row" class="nowidth">Preview</th>
@@ -764,56 +764,56 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 						<td class="wr_width">
 							<fieldset class="wr_width">
 							<legend class="screen-reader-text"><span>Font</span></legend>
-	
+
 								<select class="wr_width" name="watermark_text[font]">
 									<?php foreach($this->getFonts() as $key => $value) : ?>
-									
+
 									<?php $selected = $watermark_text['font'] == $key; ?>
-	
+
 									<option value="<?php echo $key; ?>" style="font-family: '<?php echo $value; ?>';"<?php echo $selected ? ' selected="selected"' : null; ?>>
 										<?php echo $value; ?>
 									</option>
 									<?php endforeach; ?>
 								</select>
-							
+
 							</fieldset>
 						</td>
 						<td rowspan="3">
 							<img id="previewImg_text" src="" alt="" />
 						</td>
 					</tr>
-					
+
 					<tr valign="top">
 						<th scope="row">Text size</th>
 						<td class="wr_width">
 							<fieldset class="wr_width">
 							<legend class="screen-reader-text"><span>Text size</span></legend>
-							
+
 							<input class="wr_right" name="watermark_text[size]" type="text" value="<?php echo $watermark_text['size']; ?>" size="3" />
 							<?php
 							// http://php.net/imagettftext - $size attribute uses "px" in GD v1 and "pt" in GD v2
 							echo version_compare(GD_VERSION, 2, '>=') ? 'pt' : 'px';
 							?>
-							
+
 							</fieldset>
 						</td>
 					</tr>
-					
+
 					<tr valign="top">
 						<th scope="row">Text color</th>
 						<td class="wr_width">
 							<fieldset class="wr_width">
 							<legend class="screen-reader-text"><span>Text color</span></legend>
-							
+
 							<span id="watermark_text_color_hash">#</span><input name="watermark_text[color]" type="text" maxlength="6" size="6" value="<?php echo $watermark_text['color']; ?>" />
 							<div class="colorSelector">
 								<div<?php if(!empty($watermark_text['color'])) : ?> style="background-color: #<?php echo $watermark_text['color']; ?>;"<?php endif; ?>></div>
 							</div>
-	
+
 							</fieldset>
 						</td>
 					</tr>
-					
+
 				</table>
 			</div>
 
