@@ -6,7 +6,7 @@ class Watermark_Reloaded {
 	 *
 	 * @var string
 	 */
-	public $version                 = '1.2.5';
+	public $version                 = '1.5';
 
 	/**
 	 * Array with default options
@@ -437,7 +437,8 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 
 		$allowed_options = array(
 			'watermark_donated',
-			'watermark_hide_nag'
+			'watermark_hide_nag',
+			'watermark_hide_pro_nag'
 		);
 
 		// set watermark options
@@ -495,7 +496,7 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 	 */
 	public function add_plugin_links($links, $file) {
 		if($file == plugin_basename(WR_LOADER)) {
-			$links[] = '<a href="http://randomplac.es/wordpress-plugins/donate/">Donate</a>';
+			$links[] = '<a href="http://eappz.eu/en/donate/">Donate</a>';
 		}
 
 		return $links;
@@ -576,7 +577,7 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 				'Thanks for using <a href="' . $this->_settings_url . '">Watermark RELOADED</a>! You\'ve installed this plugin over a month ago.' . PHP_EOL .
 				'If it works and you are satisfied with it, isn\'t it worth at least a few Euros/Dollars?' . PHP_EOL .
 				'Donations help me to continue support and development of this <em>free</em> software!' . PHP_EOL .
-				'<a href="http://randomplac.es/wordpress-plugins/donate/" target="_blank">Sure, no problem!</a>' . PHP_EOL .
+				'<a href="http://eappz.eu/en/donate/" target="_blank">Sure, no problem!</a>' . PHP_EOL .
 				'<a href="' . $this->_settings_url . '&option_name=watermark_donated&option_value=1" rel="ajax" style="float: right; display: block; border: none; margin: 3px 0 0 10px;">' . PHP_EOL .
 					'<small style="font-weight: normal;">' . PHP_EOL .
 						'Sure, but I already did!' . PHP_EOL .
@@ -592,6 +593,21 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 			$this->_messages['updated'][] =
 				'Thank you very much for your donation. You help me to continue support and development of this plugin and other free software!' . PHP_EOL .
 				'<a href="' . $this->_settings_url . '&option_name=watermark_hide_nag&option_value=1">' . PHP_EOL .
+					'<small style="font-weight: normal;">' . PHP_EOL .
+						'Hide this notice' . PHP_EOL .
+					'</small>' . PHP_EOL .
+				'</a>';
+		}
+	}
+
+	private function proNag() {
+		if(!$this->get_option('watermark_hide_pro_nag')) {
+			$this->_messages['error'][] =
+				'<strong>Need more advanced watermarking features?</strong><br /><br />' . PHP_EOL .
+				'Try <a href="http://eappz.eu/en/products/watermark-reloaded-pro/" target="_blank">Watermark RELOADED Pro</a>' . PHP_EOL .
+				'everything that you will ever need for watermarking and more. Full feature list with screenshosts and other' . PHP_EOL .
+				'details is available <a href="http://eappz.eu/en/products/watermark-reloaded-pro/" target="_blank">here</a>.' . PHP_EOL .
+				'<a href="' . $this->_settings_url . '&option_name=watermark_hide_pro_nag&option_value=1" rel="ajax" style="float: right; display: block; border: none; margin: 3px 0 0">' . PHP_EOL .
 					'<small style="font-weight: normal;">' . PHP_EOL .
 						'Hide this notice' . PHP_EOL .
 					'</small>' . PHP_EOL .
@@ -649,6 +665,7 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 
 		// add donations nag messages
 		$this->donationsNag();
+		$this->proNag();
 
 		foreach($this->_messages as $namespace => $messages) {
 			foreach($messages as $message) {

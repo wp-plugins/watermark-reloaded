@@ -1,18 +1,18 @@
 <?php
 /*
 Plugin Name: Watermark RELOADED
-Plugin URI: http://randomplac.es/wordpress-plugins/watermark-reloaded/
+Plugin URI: http://eappz.eu/en/products/watermark-reloaded/
 Description: Add watermark to your uploaded images and customize your watermark appearance in user friendly settings page.
-Version: 1.2.4
+Version: 1.3
 Author: Sandi Verdev
-Author URI: http://randomplac.es/
+Author URI: http://eAppz.eu/
 */
 
 register_activation_hook(__FILE__, 'watermark_reloaded_activate');
 
 // display error message to users
-if ($_GET['action'] == 'error_scrape') {                                                                                                   
-    die("Sorry, Watermark RELOADED requires PHP 5.0 or higher. Please deactivate Watermark RELOADED.");                                 
+if (array_key_exists('action', $_GET) && $_GET['action'] == 'error_scrape') {
+    die("Sorry, Watermark RELOADED requires PHP 5.0 or higher. Please deactivate Watermark RELOADED.");
 }
 
 function watermark_reloaded_activate() {
@@ -21,8 +21,9 @@ function watermark_reloaded_activate() {
 	}
 }
 
-// require Watermark RELOADED if PHP 5 installed
-if ( version_compare( phpversion(), '5.0', '>=') ) {
+// require Watermark RELOADED if PHP 5 installed and if we're in admin,
+// as we do not need the plugin in frontend
+if ( version_compare( phpversion(), '5.0', '>=') && is_admin() ) {
 	define('WR_LOADER', __FILE__);
 
 	require_once(dirname(__FILE__) . '/watermark-reloaded.php');

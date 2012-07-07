@@ -1,10 +1,10 @@
-=== Plugin Name ===
+=== Watermark RELOADED ===
 Contributors: sverde1
-Donate link: http://randomplac.es/wordpress-plugins/donate/
-Tags: watermark, images, upload, Post, admin
-Requires at least: 2.9
-Tested up to: 3.0.1
-Stable tag: 1.2.5
+Donate link: http://eappz.eu/en/donate/
+Tags: watermark, images, pictures, text watermark, image watermark, watermark reloaded, upload, Post, admin
+Requires at least: 3.0
+Tested up to: 3.4.1
+Stable tag: 1.3
 
 Add watermark to your uploaded images and customize your watermark appearance in user friendly settings page.
 
@@ -12,6 +12,10 @@ Add watermark to your uploaded images and customize your watermark appearance in
 
 This plugin allows you to watermark your uploaded images. You can create watermark with different fonts and apply it
 to different image sizes (thumbnail, medium, large, fullsize), positioning it anywhere on the image.
+
+If you need more watermarking features like image watermark and advanced options for text watermark like (transparent) 
+watermark background, text outline and maybe support for current user variables in text watermark, then please take a
+look at <a href="http://eappz.eu/en/products/watermark-reloaded-pro/">Watermark RELOADED Pro</a>.
 
 Requirements:
 
@@ -23,13 +27,10 @@ To-do:
 
 * Bug fixing (request by: all)
 * Don't display watermark on images where watermark would overflow image (request by: alex)
-* Watermark background color and opacity (request by: quentin, alex, Richard, nick)
-* Option to disable watermark on certain pictures (request by: anchy-9, Yannick Chauvet)
 * Watermarking aditional image sizes added by other plugins (request by: twincascos)
-* Watermark pictures with image (request by: Loverock, Nicolas)
 * Watermarking images that were uploaded before plugin was installed (request by: anchy-9, Blogging Junction, Ashkir, Mobile Ground, Nicolas)
-* Watermark text with outline (request by: James)
-* ...
+* Image size aware watermark (request by: brohism)
+* Watermark outside picture
 
 == Installation ==
 
@@ -97,3 +98,6 @@ No there's no way to watermark previously uploaded images and probably this feau
 
 = 1.2.5 =
 * Bugfix on upgrade to Wordpress 3.0
+
+= 1.3 =
+* Bugfixes and compatibility fixes
