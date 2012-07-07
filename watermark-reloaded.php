@@ -6,7 +6,7 @@ class Watermark_Reloaded {
 	 *
 	 * @var string
 	 */
-	public $version                 = '1.5';
+	public $version                 = '1.3';
 
 	/**
 	 * Array with default options
@@ -14,15 +14,16 @@ class Watermark_Reloaded {
 	 * @var array
 	 */
 	protected $_options             = array(
-		'watermark_donated'  => 0,
-		'watermark_hide_nag' => 0,
-		'watermark_on'       => array(),
-		'watermark_position' => 'bottom_right',
-		'watermark_offset'   => array(
+		'watermark_donated'      => 0,
+		'watermark_hide_nag'     => 0,
+		'watermark_hide_pro_nag' => 0,
+		'watermark_on'           => array(),
+		'watermark_position'     => 'bottom_right',
+		'watermark_offset'       => array(
 			'x' => 5,
 			'y' => 5
 		),
-		'watermark_text'     => array(
+		'watermark_text'         => array(
 			'value' => null,
 			'font'  => 'Arial.ttf',
 			'size'  => 20,
