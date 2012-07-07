@@ -647,8 +647,6 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 			foreach($this->_options as $option => $value) {
 				if(array_key_exists($option, $_POST)) {
 					update_option($option, $_POST[$option]);
-				} else {
-					update_option($option, $value);
 				}
 			}
 
