@@ -23,9 +23,11 @@ Requirements:
 * GD extension for PHP
 * FreeType Library
 
+You can upload additional fonts to `/wp-content/plugins/watermark-reloaded/fonts/` folder.
+
 To-do:
 
-* Bug fixing (request by: all)
+* Watermark RELOADED Bug fixing (request by: all)
 * Don't display watermark on images where watermark would overflow image (request by: alex)
 * Watermark aditional image sizes added by other plugins (request by: twincascos)
 * Watermark images that were uploaded before plugin was installed (request by: anchy-9, Blogging Junction, Ashkir, Mobile Ground, Nicolas)
