@@ -23,6 +23,8 @@ Requirements:
 * GD extension for PHP
 * FreeType Library
 
+You can upload additional fonts to `/wp-content/plugins/watermark-reloaded/fonts/` folder.
+
 To-do:
 
 * Watermark RELOADED Bug fixing (request by: all)
