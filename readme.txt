@@ -10,8 +10,8 @@ Add watermark to your uploaded images and customize your watermark appearance in
 
 == Description ==
 
-This plugin allows you to watermark your uploaded images. You can create watermark with different fonts and apply it
-to different image sizes (thumbnail, medium, large, fullsize), positioning it anywhere on the image.
+This plugin allows you to watermark your uploaded images. You can create watermark with different fonts and apply
+it to different image sizes (thumbnail, medium, large, fullsize) and positioning the watermark anywhere on the image.
 
 If you need more watermarking features like image watermark and advanced options for text watermark like (transparent) 
 watermark background, text outline and maybe support for current user variables in text watermark, then you should check
@@ -27,8 +27,8 @@ To-do:
 
 * Bug fixing (request by: all)
 * Don't display watermark on images where watermark would overflow image (request by: alex)
-* Watermarking aditional image sizes added by other plugins (request by: twincascos)
-* Watermarking images that were uploaded before plugin was installed (request by: anchy-9, Blogging Junction, Ashkir, Mobile Ground, Nicolas)
+* Watermark aditional image sizes added by other plugins (request by: twincascos)
+* Watermark images that were uploaded before plugin was installed (request by: anchy-9, Blogging Junction, Ashkir, Mobile Ground, Nicolas)
 * Image size aware watermark (request by: brohism)
 * Watermark outside picture
 
