@@ -6,7 +6,7 @@ class Watermark_Reloaded {
 	 *
 	 * @var string
 	 */
-	public $version                 = '1.3';
+	public $version                 = '1.3.1';
 
 	/**
 	 * Array with default options
@@ -473,6 +473,9 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 			// push options page link, when generating admin menu
 			add_action('admin_menu', array(&$this, 'adminMenu'));
 
+			// dashboard widget with some statistics
+			add_action('wp_dashboard_setup', array($this, 'dashboard_widget_setup'));
+
 			add_action('pre-upload-ui', array(&$this, 'uploadDonationsNag'));
 
 			// check if post_id is "-1", meaning we're uploading watermark image
@@ -508,13 +511,142 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 	 */
 	public function adminMenu() {
 		// add option in admin menu, for setting details on watermarking
-		$plugin_page = add_options_page('Watermark Reloaded Options', 'Watermark Reloaded', 8, __FILE__, array(&$this, 'optionsPage'));
+		$plugin_page = add_options_page('Watermark Reloaded Options', 'Watermark Reloaded', 'manage_options', __FILE__, array(&$this, 'optionsPage'));
 
 		add_action('admin_print_styles-' . $plugin_page,     array(&$this, 'installStyles'));
 		add_action('admin_print_scripts-' . $plugin_page,    array(&$this, 'installScripts'));
 		// also add JS to media upload popup
 		add_action('admin_print_scripts-media-upload-popup', array(&$this, 'installScripts'));
 	}
+
+	/**
+	 * Dashboard widget setup
+	 */
+	function dashboard_widget_setup() {
+		$dashboard_widget_id = 'watermark_dashboard_widget';
+		$dashboard_widgets_order = (array)get_user_option( 'meta-box-order_dashboard' );
+
+		$all_widgets = array();
+		foreach($dashboard_widgets_order as $key => $value){
+			$all_widgets = array_merge(
+				$all_widgets,
+				explode(
+					',',
+					$value
+				)
+			);
+		}
+
+		wp_add_dashboard_widget(
+			$dashboard_widget_id,
+			'Watermark RELOADED',
+			array($this, 'dashboard_widget'),
+			null
+		);
+
+		if(!in_array($dashboard_widget_id, $all_widgets)){
+			$dashboard_widgets_order['side'] = implode(',', array(
+				$dashboard_widget_id,
+				$dashboard_widgets_order['side']
+			));
+
+			$user = wp_get_current_user();
+			update_user_option($user->ID, 'meta-box-order_dashboard', $dashboard_widgets_order);
+		}
+	}
+
+	function dashboard_widget() {
+?>
+		<style type="text/css">
+			.wr_dashboard_notice {
+				background-color: #FFFBCC;
+			    border: 1pt solid #E6DB55;
+			    margin: 0;
+			    padding: 1em;
+			}
+		</style>
+		<?php if(current_user_can('manage_options') && !$this->get_option('watermark_hide_pro_nag')) : ?>
+			<div class="wr_dashboard_notice">
+				<a href="<?php echo $this->_settings_url; ?>&option_name=watermark_hide_pro_nag&option_value=1" rel="ajax" style="float: right; display: block; border: none; ">
+					<small style="font-weight: normal;">
+						Hide this notice
+					</small>
+				</a>
+				<h4>Need more advanced watermarking features?</h4>
+				<p>
+					Try <a href="http://eappz.eu/en/products/watermark-reloaded-pro/" target="_blank">Watermark RELOADED Pro</a>
+					everything that you will ever need for watermarking and more. Full feature list with screenshosts and other
+					details is available <a href="http://eappz.eu/en/products/watermark-reloaded-pro/" target="_blank">here</a>.<br />
+					<br />
+					<a href="http://eappz.eu/en/products/watermark-reloaded-pro/" class="button secondary">Upgrade now</a>
+				</p>
+			</div>
+		<?php endif; ?>
+
+		<?php $watermark_on = $this->get_option('watermark_on'); ?>
+		<?php if(!empty($watermark_on)): ?>
+			<table width="100%">
+				<tr>
+					<th colspan="2">
+						<p class="sub">Settings</p>
+					</th>
+					<th>
+						<p class="sub">Preview</p>
+					</th>
+				</tr>
+				<tr>
+					<td width="90">Enabled for:</td>
+					<td width="100">
+						<strong>
+							<?php echo implode(
+								count($watermark_on) <= 2 ? ' & ' : ', ',
+								array_keys($watermark_on)
+							); ?>
+						</strong>
+					</td>
+					<td align="center" valign="top" rowspan="4">
+						<?php $watermark_text = $this->get_option('watermark_text'); ?>
+						<img src="<?php
+							echo implode('&amp;', array(
+								$this->_settings_url,
+								'watermarkPreview',
+								'watermark_text[value]=' . $watermark_text['value'],
+								'watermark_text[font]='  . $watermark_text['font'],
+								'watermark_text[size]='  . $watermark_text['size'],
+								'watermark_text[color]=' . $watermark_text['color']
+							));
+						?>" alt="Watermark preview" />
+					</td>
+				</tr>
+				<tr>
+					<td>Positioned at:</td>
+					<td>
+						<strong>
+							<?php echo str_replace('_', ' ', $this->get_option('watermark_position')); ?>
+						</strong>
+					</td>
+				</tr>
+				<tr>
+					<td>Offset:</td>
+					<td>
+						<strong>
+							<?php echo implode(' x ', $this->get_option('watermark_offset')); ?> px
+						</strong>
+					</td>
+				</tr>
+				<?php // only admin user can change settings ?>
+				<?php if(current_user_can('manage_options')) : ?>
+				<tr>
+					<td>&nbsp;</td>
+					<td><a href="<?php echo $this->_settings_url; ?>">Change settings</a></td>
+				</tr>
+				<?php endif; ?>
+			</table>
+		<?php else: ?>
+			<p>Watermark RELOADED is <strong>not enabled</strong>.</p>
+		<?php endif;?>
+<?php
+    }
 
 	/**
 	 * Include styles used by Watermark RELOADED
@@ -795,7 +927,7 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 							</fieldset>
 						</td>
 						<td rowspan="3">
-							<img id="previewImg_text" src="" alt="" />
+							<img id="previewImg_text" src="" alt="Watermark RELOADED" />
 						</td>
 					</tr>
 
