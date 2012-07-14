@@ -23,8 +23,6 @@ Requirements:
 * GD extension for PHP
 * FreeType Library
 
-You can upload additional fonts to `/wp-content/plugins/watermark-reloaded/fonts/` folder.
-
 To-do:
 
 * Watermark RELOADED Bug fixing (request by: all)
@@ -40,6 +38,8 @@ To-do:
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Go to Watermark RELOADED settings and enable watermark
 
+You can upload additional fonts to `/wp-content/plugins/watermark-reloaded/fonts/` folder.
+
 == Frequently Asked Questions ==
 
 = Plugin doesn't work ... =
@@ -48,8 +48,7 @@ Please specify as many informations as you can to help me debug the problem. Che
 
 = Error message says that I don't have GD extension installed =
 
-Contact your hosting provider and ask him to enable GD extension for your host, because without GD extension you can
-say good bye to watermarking.
+Contact your hosting provider and ask him to enable GD extension for your host, because without GD extension you won’t be able to watermark your images.
 
 = Error message says that I don't have FreeType Library =
 
