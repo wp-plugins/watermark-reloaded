@@ -6,16 +6,23 @@ Requires at least: 3.0
 Tested up to: 3.4.1
 Stable tag: 1.3.1
 
-Add watermark to your uploaded images and customize your watermark appearance in user friendly settings page.
+Add watermark to your uploaded images and customize your watermark appearance on a user friendly settings page.
 
 == Description ==
 
 This plugin allows you to watermark your uploaded images. You can create watermark with different fonts and apply
 it to different image sizes (thumbnail, medium, large, fullsize) and positioning the watermark anywhere on the image.
 
-If you need more watermarking features like image watermark and advanced options for text watermark like (transparent) 
-watermark background, text outline and maybe support for current user variables in text watermark, then you should check
-out <a href="http://eappz.eu/en/products/watermark-reloaded-pro/">Watermark RELOADED Pro</a>.
+<a href="http://eappz.eu/en/products/watermark-reloaded-pro/">**Upgrade to Watermark RELOADED Pro**</a> for more
+watermarking features:
+
+* watermark opacity
+* image watermark
+* watermark background color
+* text watermark with outline
+* text watermark with variables
+* upload time option to turn off the watermarking
+* many more amazing features
 
 Requirements:
 
@@ -36,7 +43,7 @@ To-do:
 
 1. Upload `watermark-reloaded/` to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Go to Watermark RELOADED settings and enable watermark
+1. Go to Watermark RELOADED settings and enable watermark on desired image sizes
 
 You can upload additional fonts to `/wp-content/plugins/watermark-reloaded/fonts/` folder.
 
@@ -44,24 +51,31 @@ You can upload additional fonts to `/wp-content/plugins/watermark-reloaded/fonts
 
 = Plugin doesn't work ... =
 
-Please specify as many informations as you can to help me debug the problem. Check in your error.log if you can.
+Please specify debug information like:
+ * screenshot of Watermark RELOADED settings
+ * any error message output (also check in php error.log file)
+ * output of your phpinfo()
 
 = Error message says that I don't have GD extension installed =
 
-Contact your hosting provider and ask him to enable GD extension for your host, because without GD extension you won’t be able to watermark your images.
+Contact your hosting provider and ask them to enable GD extension for your host, because without GD extension you
+won't be able to watermark your images.
 
 = Error message says that I don't have FreeType Library =
 
-Contact your hosting provider and ask him to install FreeType Library on your host, without it you can't make text watermarks.
+Contact your hosting provider and ask them to install FreeType Library on your host, without it you won't be able
+to make text watermarks.
 
 = Is there any way to watermark previously uploaded images? =
 
-No there's no way to watermark previously uploaded images and probably this feautre won't exist.
+No there's no way to watermark previously uploaded images. I plan to implement this feature in
+<a href="http://eappz.eu/en/products/watermark-reloaded-pro/">Watermark RELOADED Pro</a>.
 
 == Screenshots ==
 
-1. Screenshot of settings page
-2. Example of watermarked picture with applyed above watermark settings
+1. Screenshot of Watermark RELOADED settings page
+2. Example of a picture watermarked with above settings
+3. Teaser screenshot of Watermark RELOADED Pro settings page
 
 == Changelog ==
 
