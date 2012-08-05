@@ -52,6 +52,7 @@ You can upload additional fonts to `/wp-content/plugins/watermark-reloaded/fonts
 = Plugin doesn't work ... =
 
 Please specify debug information like:
+
  * screenshot of Watermark RELOADED settings
  * any error message output (also check in php error.log file)
  * output of your phpinfo()
