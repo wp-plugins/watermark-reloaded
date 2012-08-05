@@ -15,7 +15,7 @@ it to different image sizes (thumbnail, medium, large, fullsize) and positioning
 
 If you need more watermarking features like image watermark and advanced options for text watermark like (transparent) 
 watermark background, text outline and maybe support for current user variables in text watermark, then you should check
-out **<a href="http://eappz.eu/en/products/watermark-reloaded-pro/">Watermark RELOADED Pro</a>**.
+out <a href="http://eappz.eu/en/products/watermark-reloaded-pro/">**Watermark RELOADED Pro**</a>.
 
 Requirements:
 
