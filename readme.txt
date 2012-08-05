@@ -6,7 +6,7 @@ Requires at least: 3.0
 Tested up to: 3.4.1
 Stable tag: 1.3.1
 
-Add watermark to your uploaded images and customize your watermark appearance in user friendly settings page.
+Add watermark to your uploaded images and customize your watermark appearance on a user friendly settings page.
 
 == Description ==
 
@@ -15,7 +15,7 @@ it to different image sizes (thumbnail, medium, large, fullsize) and positioning
 
 If you need more watermarking features like image watermark and advanced options for text watermark like (transparent) 
 watermark background, text outline and maybe support for current user variables in text watermark, then you should check
-out <a href="http://eappz.eu/en/products/watermark-reloaded-pro/">Watermark RELOADED Pro</a>.
+out **<a href="http://eappz.eu/en/products/watermark-reloaded-pro/">Watermark RELOADED Pro</a>**.
 
 Requirements:
 
