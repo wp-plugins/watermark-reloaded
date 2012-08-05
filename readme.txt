@@ -15,20 +15,23 @@ it to different image sizes (thumbnail, medium, large, fullsize) and positioning
 
 <a href="http://eappz.eu/en/products/watermark-reloaded-pro/">**Upgrade to Watermark RELOADED Pro**</a> for more
 watermarking features:
- * watermark opacity
- * image watermark
- * watermark background color
- * text watermark with outline
- * text watermark with variables
- * upload time option to turn off the watermarking
- * many more amazing features
+
+* watermark opacity
+* image watermark
+* watermark background color
+* text watermark with outline
+* text watermark with variables
+* upload time option to turn off the watermarking
+* many more amazing features
 
 Requirements:
+
 * PHP5
 * GD extension for PHP
 * FreeType Library
 
 To-do:
+
 * Watermark RELOADED Bug fixing (request by: all)
 * Don't display watermark on images where watermark would overflow image (request by: alex)
 * Watermark aditional image sizes added by other plugins (request by: twincascos)
