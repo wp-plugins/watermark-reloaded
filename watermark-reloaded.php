@@ -14,6 +14,7 @@ class Watermark_Reloaded {
 	 * @var array
 	 */
 	protected $_options             = array(
+		'watermark_installed'    => 0,
 		'watermark_donated'      => 0,
 		'watermark_hide_nag'     => 0,
 		'watermark_hide_pro_nag' => 0,
@@ -156,28 +157,31 @@ class Watermark_Reloaded {
 	 * @return array
 	 */
 	public function applyWatermark($data) {
-		// get settings for watermarking
-		$upload_dir   = wp_upload_dir();
-		$watermark_on = $this->get_option('watermark_on');
+		// check if input data is provided, thus it is image and needs to be watermarked
+		if(!empty($data)) {
+			// get settings for watermarking
+			$upload_dir   = wp_upload_dir();
+			$watermark_on = $this->get_option('watermark_on');
 
-		// loop through image sizes ...
-		foreach($watermark_on as $image_size => $on) {
-			if($on == true) {
-				switch($image_size) {
-					case 'fullsize':
-						$filepath = $upload_dir['basedir'] . DIRECTORY_SEPARATOR . $data['file'];
-						break;
-					default:
-						if(!empty($data['sizes']) && array_key_exists($image_size, $data['sizes'])) {
-							$filepath = $upload_dir['basedir'] . DIRECTORY_SEPARATOR . dirname($data['file']) . DIRECTORY_SEPARATOR . $data['sizes'][$image_size]['file'];
-						} else {
-							// early getaway
-							continue 2;
-						}
+			// loop through image sizes ...
+			foreach($watermark_on as $image_size => $on) {
+				if($on == true) {
+					switch($image_size) {
+						case 'fullsize':
+							$filepath = $upload_dir['basedir'] . DIRECTORY_SEPARATOR . $data['file'];
+							break;
+						default:
+							if(!empty($data['sizes']) && array_key_exists($image_size, $data['sizes'])) {
+								$filepath = $upload_dir['basedir'] . DIRECTORY_SEPARATOR . dirname($data['file']) . DIRECTORY_SEPARATOR . $data['sizes'][$image_size]['file'];
+							} else {
+								// early getaway
+								continue 2;
+							}
+					}
+
+					// ... and apply watermark
+					$this->doWatermark($filepath);
 				}
-
-				// ... and apply watermark
-				$this->doWatermark($filepath);
 			}
 		}
 
@@ -434,7 +438,7 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 	 */
 	public function __construct() {
 		$this->_plugin_dir   = DIRECTORY_SEPARATOR . str_replace(basename(__FILE__), null, plugin_basename(__FILE__));
-		$this->_settings_url = 'options-general.php?page=' . plugin_basename(__FILE__);;
+		$this->_settings_url = 'options-general.php?page=' . plugin_basename(__FILE__);
 
 		$allowed_options = array(
 			'watermark_donated',
