@@ -3,8 +3,8 @@ Contributors: sverde1
 Donate link: http://eappz.eu/en/donate/
 Tags: watermark, images, pictures, text watermark, image watermark, watermark reloaded, upload, Post, admin
 Requires at least: 3.0
-Tested up to: 3.4.1
-Stable tag: 1.3.1
+Tested up to: 3.5.1
+Stable tag: 1.3.2
 
 Add watermark to your uploaded images and customize your watermark appearance on a user friendly settings page.
 
@@ -122,3 +122,6 @@ No there's no way to watermark previously uploaded images. I plan to implement t
 * Some bugfixes
 * Plugin options page credentials update
 * Added dashboard with current watermark settings and preview display
+
+= 1.3.2 =
+* Added file type check, because we need to process only image files
