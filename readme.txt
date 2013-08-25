@@ -10,8 +10,10 @@ Add watermark to your uploaded images and customize your watermark appearance on
 
 == Description ==
 
-This plugin allows you to watermark your uploaded images. You can create watermark with different fonts and apply
-it to different image sizes (thumbnail, medium, large, fullsize) and positioning the watermark anywhere on the image.
+This plugin allows you to watermark your uploaded images. You can create watermark with different fonts, colors and
+apply those watermarks to different image sizes (thumbnail, medium, large, fullsize). You can also position the watermark
+anywhere on the image within Watermark RELOADED settings. Watermarking settings are simple to use and provide you with
+instant preview of how your watermark will look like on the uploaded image.
 
 <a href="http://eappz.eu/en/products/watermark-reloaded-pro/">**Upgrade to Watermark RELOADED Pro**</a> for more
 watermarking features:
