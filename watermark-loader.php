@@ -3,7 +3,7 @@
 Plugin Name: Watermark RELOADED
 Plugin URI: http://eappz.eu/en/products/watermark-reloaded/
 Description: Add watermark to your uploaded images and customize your watermark appearance in user friendly settings page.
-Version: 1.3.2
+Version: 1.3.3
 Author: Sandi Verdev
 Author URI: http://eAppz.eu/
 */
