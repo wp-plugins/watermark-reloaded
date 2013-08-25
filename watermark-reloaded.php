@@ -6,7 +6,7 @@ class Watermark_Reloaded {
 	 *
 	 * @var string
 	 */
-	public $version                 = '1.3.1';
+	public $version                 = '1.3.3';
 
 	/**
 	 * Array with default options
@@ -647,7 +647,7 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 				<?php endif; ?>
 			</table>
 		<?php else: ?>
-			<p>Watermark RELOADED is <strong>not enabled</strong>.</p>
+			<p>Watermark RELOADED is <strong>not enabled</strong>. Go to <a href="<?php echo $this->_settings_url; ?>">settings</a> and enable it now!</p>
 		<?php endif;?>
 <?php
     }
