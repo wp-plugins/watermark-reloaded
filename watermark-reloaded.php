@@ -480,7 +480,7 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 			// dashboard widget with some statistics
 			add_action('wp_dashboard_setup', array($this, 'dashboard_widget_setup'));
 
-			add_action('pre-upload-ui', array(&$this, 'uploadDonationsNag'));
+			add_action('post-upload-ui', array(&$this, 'uploadDonationsNag'));
 
 			// check if post_id is "-1", meaning we're uploading watermark image
 			if(!(array_key_exists('post_id', $_REQUEST) && $_REQUEST['post_id'] == -1)) {
@@ -591,12 +591,9 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 		<?php if(!empty($watermark_on)): ?>
 			<table width="100%">
 				<tr>
-					<th colspan="2">
-						<p class="sub">Settings</p>
-					</th>
-					<th>
-						<p class="sub">Preview</p>
-					</th>
+					<td colspan="2">
+						<h3>Settings</h3>
+					</td>
 				</tr>
 				<tr>
 					<td width="90">Enabled for:</td>
@@ -607,19 +604,6 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 								array_keys($watermark_on)
 							); ?>
 						</strong>
-					</td>
-					<td align="center" valign="top" rowspan="4">
-						<?php $watermark_text = $this->get_option('watermark_text'); ?>
-						<img src="<?php
-							echo implode('&amp;', array(
-								$this->_settings_url,
-								'watermarkPreview',
-								'watermark_text[value]=' . $watermark_text['value'],
-								'watermark_text[font]='  . $watermark_text['font'],
-								'watermark_text[size]='  . $watermark_text['size'],
-								'watermark_text[color]=' . $watermark_text['color']
-							));
-						?>" alt="Watermark preview" />
 					</td>
 				</tr>
 				<tr>
@@ -645,6 +629,26 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 					<td><a href="<?php echo $this->_settings_url; ?>">Change settings</a></td>
 				</tr>
 				<?php endif; ?>
+				<tr>
+				    <td colspan="2">
+						<h3>Preview</h3>
+					</td>
+				</tr>
+				<tr>
+					<td align="center" valign="top" colspan="2">
+						<?php $watermark_text = $this->get_option('watermark_text'); ?>
+						<img src="<?php
+							echo implode('&amp;', array(
+								$this->_settings_url,
+								'watermarkPreview',
+								'watermark_text[value]=' . $watermark_text['value'],
+								'watermark_text[font]='  . $watermark_text['font'],
+								'watermark_text[size]='  . $watermark_text['size'],
+								'watermark_text[color]=' . $watermark_text['color']
+							));
+						?>" alt="Watermark preview" />
+					</td>
+				</tr>
 			</table>
 		<?php else: ?>
 			<p>Watermark RELOADED is <strong>not enabled</strong>. Go to <a href="<?php echo $this->_settings_url; ?>">settings</a> and enable it now!</p>
@@ -711,7 +715,7 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 		$is_one_month = time() - $this->get_option('watermark_installed') > 60 * 60 * 24 * 30;
 		if($is_one_month && !$this->get_option('watermark_donated') && !$this->get_option('watermark_hide_nag')) {
 			$this->_messages['updated'][] =
-				'Thanks for using <a href="' . $this->_settings_url . '">Watermark RELOADED</a>! You\'ve installed this plugin over a month ago.' . PHP_EOL .
+				'Thank you for using <a href="' . $this->_settings_url . '">Watermark RELOADED</a>! You\'ve installed this plugin over a month ago.' . PHP_EOL .
 				'If it works and you are satisfied with it, isn\'t it worth at least a few Euros/Dollars?' . PHP_EOL .
 				'Donations help me to continue support and development of this <em>free</em> software!' . PHP_EOL .
 				'<a href="http://eappz.eu/en/donate/" target="_blank">Sure, no problem!</a>' . PHP_EOL .
@@ -763,7 +767,7 @@ class Watermark_Reloaded_Admin extends Watermark_Reloaded {
 			foreach($this->_messages as $namespace => $messages) {
 				foreach($messages as $message) {
 ?>
-<div class="<?php echo $namespace; ?>">
+<div class="<?php echo $namespace; ?>" style="text-align: left;">
 	<p>
 		<strong><?php echo $message; ?></strong>
 	</p>
