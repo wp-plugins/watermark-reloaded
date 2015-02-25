@@ -6,7 +6,7 @@ class Watermark_Reloaded {
 	 *
 	 * @var string
 	 */
-	public $version                 = '1.3.3';
+	public $version                 = '1.3.5';
 
 	/**
 	 * Array with default options
